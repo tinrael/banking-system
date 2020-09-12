@@ -422,3 +422,6 @@ bin/
 obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/codeblocks
+
+# Visual Paradigm temporary and backup files
+*.vpp.*
