@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct tCustomer {
     int id;
@@ -39,6 +40,33 @@ void insert_m(FILE* ind, FILE* fl) {
     fwrite(&index, sizeof(struct tIndex), 1, ind);
 }
 
+void get_m(FILE* ind, FILE* fl, int customerId) {
+    struct tIndex index;
+
+    fseek(ind, 0L, SEEK_SET);
+
+    bool isFound = false;
+    while (!feof(ind)) {
+        fread(&index, sizeof(struct tIndex), 1, ind);
+
+        if (index.id == customerId) {
+            isFound = true;
+            break;
+        }
+    }
+
+    if (isFound) {
+        struct tCustomer customer;
+
+        fseek(fl, index.address, SEEK_SET);
+        fread(&customer, sizeof(struct tCustomer), 1, fl);
+
+        printf("%d %s %s\n", customer.id, customer.firstName, customer.lastName);
+    } else {
+        printf("Not found.\n");
+    }
+}
+
 int main() {
     FILE* ind = fopen("customers.ind", "w+");
     if (!ind) {
@@ -53,6 +81,11 @@ int main() {
     }
 
     insert_m(ind, fl);
+
+    int id;
+    printf("ID: ");
+    scanf("%d", &id);
+    get_m(ind, fl, id);
 
     fclose(fl);
     fclose(ind);
