@@ -67,16 +67,21 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     }
 }
 
+void update_m(FILE* ind, FILE* fl, int customerId) {
+
+}
+
 int main() {
-    FILE* ind = fopen("customers.ind", "w+");
+    FILE* ind = fopen("customers.ind", "wb+");
     if (!ind) {
         fprintf(stderr, "Unable to open the file.");
         return -1;
     }
 
-    FILE* fl = fopen("customers.fl", "w+");
+    FILE* fl = fopen("customers.fl", "wb+");
     if (!fl) {
         fprintf(stderr, "Unable to open the file.");
+        fclose(ind);
         return -1;
     }
 
