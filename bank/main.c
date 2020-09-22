@@ -46,9 +46,7 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     fseek(ind, 0L, SEEK_SET);
 
     bool isFound = false;
-    while (!feof(ind)) {
-        fread(&index, sizeof(struct tIndex), 1, ind);
-
+    while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
         if (index.id == customerId) {
             isFound = true;
             break;
@@ -67,28 +65,58 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     }
 }
 
-void update_m(FILE* ind, FILE* fl, int customerId) {
+bool find_m(FILE* ind, struct tIndex* index, int customerId) {
+    fseek(ind, 0L, SEEK_SET);
 
+    while (fread(index, sizeof(struct tIndex), 1, ind) == 1) {
+        if (index->id == customerId) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void update_m(FILE* ind, FILE* fl, int customerId) {
+    struct tIndex index;
+
+    if (find_m(ind, &index, customerId)) {
+        struct tCustomer customer;
+
+        fseek(fl, index.address, SEEK_SET);
+        fread(&customer, sizeof(struct tCustomer), 1, fl);
+
+        printf("Updating %d %s %s\n", customer.id, customer.firstName, customer.lastName);
+
+        printf("First Name: ");
+        scanf("%63s", customer.firstName);
+
+        printf("Last Name: ");
+        scanf("%63s", customer.lastName);
+
+        fseek(fl, index.address, SEEK_SET);
+        fwrite(&customer, sizeof(struct tCustomer), 1, fl);
+    } else {
+        printf("Not found.\n");
+    }
 }
 
 int main() {
-    FILE* ind = fopen("customers.ind", "wb+");
+    FILE* ind = fopen("customers.ind", "rb+");
     if (!ind) {
-        fprintf(stderr, "Unable to open the file.");
+        fprintf(stderr, "Unable to open the file.\n");
         return -1;
     }
 
-    FILE* fl = fopen("customers.fl", "wb+");
+    FILE* fl = fopen("customers.fl", "rb+");
     if (!fl) {
-        fprintf(stderr, "Unable to open the file.");
+        fprintf(stderr, "Unable to open the file.\n");
         fclose(ind);
         return -1;
     }
 
-    insert_m(ind, fl);
-
     int id;
-    printf("ID: ");
+
+    printf("Search | ID: ");
     scanf("%d", &id);
     get_m(ind, fl, id);
 
