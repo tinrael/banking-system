@@ -40,6 +40,17 @@ void insert_m(FILE* ind, FILE* fl) {
     fwrite(&index, sizeof(struct tIndex), 1, ind);
 }
 
+bool find_m(FILE* ind, struct tIndex* index, int customerId) {
+    fseek(ind, 0L, SEEK_SET);
+
+    while (fread(index, sizeof(struct tIndex), 1, ind) == 1) {
+        if (index->id == customerId) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void get_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
@@ -53,17 +64,6 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     } else {
         printf("Not found.\n");
     }
-}
-
-bool find_m(FILE* ind, struct tIndex* index, int customerId) {
-    fseek(ind, 0L, SEEK_SET);
-
-    while (fread(index, sizeof(struct tIndex), 1, ind) == 1) {
-        if (index->id == customerId) {
-            return true;
-        }
-    }
-    return false;
 }
 
 void update_m(FILE* ind, FILE* fl, int customerId) {
