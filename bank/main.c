@@ -43,17 +43,7 @@ void insert_m(FILE* ind, FILE* fl) {
 void get_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
-    fseek(ind, 0L, SEEK_SET);
-
-    bool isFound = false;
-    while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
-        if (index.id == customerId) {
-            isFound = true;
-            break;
-        }
-    }
-
-    if (isFound) {
+    if (find_m(ind, &index, customerId)) {
         struct tCustomer customer;
 
         fseek(fl, index.address, SEEK_SET);
@@ -85,7 +75,7 @@ void update_m(FILE* ind, FILE* fl, int customerId) {
         fseek(fl, index.address, SEEK_SET);
         fread(&customer, sizeof(struct tCustomer), 1, fl);
 
-        printf("Updating %d %s %s\n", customer.id, customer.firstName, customer.lastName);
+        printf("Updating %d %s %s:\n", customer.id, customer.firstName, customer.lastName);
 
         printf("First Name: ");
         scanf("%63s", customer.firstName);
