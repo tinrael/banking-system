@@ -103,6 +103,24 @@ void update_m(FILE* ind, FILE* fl, int customerId) {
     }
 }
 
+void delete_m(FILE* ind, FILE* fl, int customerId) {
+    struct tIndex index;
+
+    if (find_m(ind, &index, customerId)) {
+        struct tCustomerContainer customerContainer;
+
+        fseek(fl, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+
+        customerContainer.isDeleted = true;
+
+        fseek(fl, index.address, SEEK_SET);
+        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+    } else {
+        printf("Not found.\n");
+    }
+}
+
 int main() {
     FILE* ind = fopen("customers.ind", "wb+");
     if (!ind) {
