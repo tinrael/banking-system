@@ -8,6 +8,11 @@ struct tCustomer {
     char lastName[64];
 };
 
+struct tCustomerContainer {
+    bool isDeleted; // identify if the record is logically deleted
+    struct tCustomer customer;
+};
+
 struct tAccount {
     int number;
     double balance;
@@ -19,22 +24,24 @@ struct tIndex {
 };
 
 void insert_m(FILE* ind, FILE* fl) {
-    struct tCustomer customer;
+    struct tCustomerContainer customerContainer;
+    customerContainer.isDeleted = false;
+
     printf("ID: ");
-    scanf("%d", &(customer.id));
+    scanf("%d", &(customerContainer.customer.id));
 
     printf("First Name: ");
-    scanf("%63s", customer.firstName);
+    scanf("%63s", customerContainer.customer.firstName);
 
     printf("Last Name: ");
-    scanf("%63s", customer.lastName);
+    scanf("%63s", customerContainer.customer.lastName);
 
     struct tIndex index;
-    index.id = customer.id;
+    index.id = customerContainer.customer.id;
 
     fseek(fl, 0L, SEEK_END);
     index.address = ftell(fl);
-    fwrite(&customer, sizeof(struct tCustomer), 1, fl);
+    fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
 
     fseek(ind, 0L, SEEK_END);
     fwrite(&index, sizeof(struct tIndex), 1, ind);
@@ -55,12 +62,15 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
     if (find_m(ind, &index, customerId)) {
-        struct tCustomer customer;
+        struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
-        fread(&customer, sizeof(struct tCustomer), 1, fl);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
 
-        printf("%d %s %s\n", customer.id, customer.firstName, customer.lastName);
+        printf("%d %s %s\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName);
     } else {
         printf("Not found.\n");
     }
@@ -70,34 +80,37 @@ void update_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
     if (find_m(ind, &index, customerId)) {
-        struct tCustomer customer;
+        struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
-        fread(&customer, sizeof(struct tCustomer), 1, fl);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
 
-        printf("Updating %d %s %s:\n", customer.id, customer.firstName, customer.lastName);
+        printf("Updating %d %s %s:\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName);
 
         printf("First Name: ");
-        scanf("%63s", customer.firstName);
+        scanf("%63s", customerContainer.customer.firstName);
 
         printf("Last Name: ");
-        scanf("%63s", customer.lastName);
+        scanf("%63s", customerContainer.customer.lastName);
 
         fseek(fl, index.address, SEEK_SET);
-        fwrite(&customer, sizeof(struct tCustomer), 1, fl);
+        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
     } else {
         printf("Not found.\n");
     }
 }
 
 int main() {
-    FILE* ind = fopen("customers.ind", "rb+");
+    FILE* ind = fopen("customers.ind", "wb+");
     if (!ind) {
         fprintf(stderr, "Unable to open the file.\n");
         return -1;
     }
 
-    FILE* fl = fopen("customers.fl", "rb+");
+    FILE* fl = fopen("customers.fl", "wb+");
     if (!fl) {
         fprintf(stderr, "Unable to open the file.\n");
         fclose(ind);
