@@ -26,7 +26,10 @@ void addToBeginning(tNode** head, int key) {
     (*head) = newOne;
 }
 
-// inserts an element in the ascending order (from the smallest to the largest)
+/* TODO: need code refactoring.
+ *
+ * inserts an element in the ascending order (from the smallest to the largest)
+ */
 void addInAscendingOrder(tNode** head, int key) {
     tNode* newOne = (tNode*) malloc(sizeof(tNode));
     newOne->key = key;
