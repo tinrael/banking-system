@@ -26,7 +26,7 @@ void addToList(tNode** head, int key) {
     (*head) = newOne;
 }
 
-// erases the list node pointed at by toDelete
+// erases (free) the list node pointed at by toDelete
 void deleteListNode(tNode** head, tNode* toDelete) {
     if ((*head) != NULL && toDelete != NULL) {
         if ((*head) == toDelete) {
@@ -45,7 +45,7 @@ void deleteListNode(tNode** head, tNode* toDelete) {
     }
 }
 
-// erases the element with the key 'key'
+// erases (free) the element with the key 'key'
 void eraseFromList(tNode** head, int key) {
     tNode* current = *head;
     while (current != NULL) {
@@ -63,6 +63,17 @@ void printList(tNode* head) {
         head = head->next;
     }
     printf("\n");
+}
+
+// erases (free) all elements
+void clearList(tNode** head) {
+    tNode* toDelete;
+    while ((*head) != NULL) {
+        toDelete = *head;
+        *head = (*head)->next;
+
+        free(toDelete);
+    }
 }
 
 #endif // DOUBLYLINKEDLIST_H_INCLUDED
