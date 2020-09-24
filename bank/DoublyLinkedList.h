@@ -12,7 +12,7 @@ typedef struct tagNode {
 } tNode;
 
 // inserts an element to the beginning
-void addToList(tNode** head, int key) {
+void addToBeginning(tNode** head, int key) {
     tNode* newOne = (tNode*) malloc(sizeof(tNode));
     newOne->key = key;
 
@@ -24,6 +24,48 @@ void addToList(tNode** head, int key) {
     }
 
     (*head) = newOne;
+}
+
+// inserts an element in the ascending order (from the smallest to the largest)
+void addInAscendingOrder(tNode** head, int key) {
+    tNode* newOne = (tNode*) malloc(sizeof(tNode));
+    newOne->key = key;
+
+    if ((*head) == NULL) {
+        newOne->next = NULL;
+        newOne->prev = NULL;
+        *head = newOne;
+        return;
+    }
+
+    tNode* current = *head;
+    while (current != NULL) {
+        if (current->key > key) {
+            newOne->next = current;
+            newOne->prev = current->prev;
+
+            if (current->prev != NULL) {
+                current->prev->next = newOne;
+            }
+
+            current->prev = newOne;
+
+            if (current == (*head)) {
+                *head = newOne;
+            }
+
+            return;
+        }
+
+        if (current->next == NULL) {
+            newOne->next = NULL;
+            newOne->prev = current;
+            current->next = newOne;
+            return;
+        }
+
+        current = current->next;
+    }
 }
 
 // erases (free) the list node pointed at by toDelete
