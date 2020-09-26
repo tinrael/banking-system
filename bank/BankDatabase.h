@@ -26,10 +26,10 @@ struct tIndex {
 };
 
 // read indexes from the file to the RAM
-void initialize(FILE* ind);
+void initialize(FILE* ind, FILE* ws);
 
 // write indexes from the RAM to the disk file and free the RAM, occupied by these indexes
-void finilize(FILE* ind);
+void finilize(FILE* ind, FILE* ws);
 
 void insert_m(FILE* fl);
 
