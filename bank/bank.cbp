@@ -35,6 +35,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Bank.h" />
+		<Unit filename="DoublyLinkedList.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="DoublyLinkedList.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
