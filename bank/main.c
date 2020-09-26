@@ -2,24 +2,27 @@
 #include <stdio.h>
 
 int main() {
-    FILE* ind = fopen("customers.ind", "wb+");
+    FILE* ind = fopen("customers.ind", "rb+");
     if (!ind) {
         fprintf(stderr, "Unable to open the file.\n");
         return -1;
     }
 
-    FILE* fl = fopen("customers.fl", "wb+");
+    FILE* fl = fopen("customers.fl", "rb+");
     if (!fl) {
         fprintf(stderr, "Unable to open the file.\n");
         fclose(ind);
         return -1;
     }
 
-    int id;
+    initialize(ind);
 
+    int id;
     printf("Search | ID: ");
     scanf("%d", &id);
-    get_m(ind, fl, id);
+    get_m(fl, id);
+
+    finilize(ind);
 
     fclose(fl);
     fclose(ind);
