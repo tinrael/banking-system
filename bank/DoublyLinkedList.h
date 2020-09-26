@@ -1,7 +1,7 @@
 #ifndef DOUBLYLINKEDLIST_H_INCLUDED
 #define DOUBLYLINKEDLIST_H_INCLUDED
 
-#include "Bank.h"
+#include "BankDatabase.h"
 
 typedef struct tagNode {
     struct tIndex index;

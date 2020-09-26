@@ -31,10 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Bank.c">
+		<Unit filename="BankDatabase.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="Bank.h" />
+		<Unit filename="BankDatabase.h" />
 		<Unit filename="DoublyLinkedList.c">
 			<Option compilerVar="CC" />
 		</Unit>

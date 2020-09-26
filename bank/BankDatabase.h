@@ -1,5 +1,5 @@
-#ifndef BANK_H_INCLUDED
-#define BANK_H_INCLUDED
+#ifndef BANKDATABASE_H_INCLUDED
+#define BANKDATABASE_H_INCLUDED
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -41,4 +41,4 @@ void update_m(FILE* fl, int customerId);
 
 void delete_m(FILE* ind, FILE* fl, int customerId);
 
-#endif // BANK_H_INCLUDED
+#endif // BANKDATABASE_H_INCLUDED
