@@ -12,11 +12,9 @@ void initialize(FILE* ind) {
     while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
         addInAscendingOrder(&indexesList, index);
     }
-
-    printList(indexesList);
 }
 
-void insert_m(FILE* ind, FILE* fl) {
+void insert_m(FILE* fl) {
     struct tCustomerContainer customerContainer;
     customerContainer.isDeleted = false;
 
@@ -36,25 +34,17 @@ void insert_m(FILE* ind, FILE* fl) {
     index.address = ftell(fl);
     fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
 
-    fseek(ind, 0L, SEEK_END);
-    fwrite(&index, sizeof(struct tIndex), 1, ind);
+    addInAscendingOrder(&indexesList, index);
 }
 
-bool find_m(FILE* ind, struct tIndex* index, int customerId) {
-    fseek(ind, 0L, SEEK_SET);
-
-    while (fread(index, sizeof(struct tIndex), 1, ind) == 1) {
-        if (index->id == customerId) {
-            return true;
-        }
-    }
-    return false;
+bool find_m(struct tIndex* index, int customerId) {
+    return findIndex(indexesList, index, customerId);
 }
 
-void get_m(FILE* ind, FILE* fl, int customerId) {
+void get_m(FILE* fl, int customerId) {
     struct tIndex index;
 
-    if (find_m(ind, &index, customerId)) {
+    if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
@@ -69,10 +59,10 @@ void get_m(FILE* ind, FILE* fl, int customerId) {
     }
 }
 
-void update_m(FILE* ind, FILE* fl, int customerId) {
+void update_m(FILE* fl, int customerId) {
     struct tIndex index;
 
-    if (find_m(ind, &index, customerId)) {
+    if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
@@ -99,7 +89,7 @@ void update_m(FILE* ind, FILE* fl, int customerId) {
 void delete_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
-    if (find_m(ind, &index, customerId)) {
+    if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);

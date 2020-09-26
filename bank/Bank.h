@@ -28,13 +28,13 @@ struct tIndex {
 // upload indexes from the file to the memory
 void initialize(FILE* ind);
 
-void insert_m(FILE* ind, FILE* fl);
+void insert_m(FILE* fl);
 
-bool find_m(FILE* ind, struct tIndex* index, int customerId);
+bool find_m(struct tIndex* index, int customerId);
 
-void get_m(FILE* ind, FILE* fl, int customerId);
+void get_m(FILE* fl, int customerId);
 
-void update_m(FILE* ind, FILE* fl, int customerId);
+void update_m(FILE* fl, int customerId);
 
 void delete_m(FILE* ind, FILE* fl, int customerId);
 
