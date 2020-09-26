@@ -1,14 +1,14 @@
-#include "Bank.h"
+#include "BankDatabase.h"
 #include <stdio.h>
 
 int main() {
-    FILE* ind = fopen("customers.ind", "rb+");
+    FILE* ind = fopen("customers.ind", "wb+");
     if (!ind) {
         fprintf(stderr, "Unable to open the file.\n");
         return -1;
     }
 
-    FILE* fl = fopen("customers.fl", "rb+");
+    FILE* fl = fopen("customers.fl", "wb+");
     if (!fl) {
         fprintf(stderr, "Unable to open the file.\n");
         fclose(ind);
