@@ -1,31 +1,43 @@
 #include "BankDatabase.h"
 #include "DoublyLinkedList.h"
+#include "Stack.h"
 #include <stdlib.h>
 
 tNode* indexesList = NULL;
+tElement* top = NULL;
 
-void initialize(FILE* ind) {
+void initialize(FILE* ind, FILE* ws) {
+    clearList(&indexesList);
     struct tIndex index;
-
     fseek(ind, 0L, SEEK_SET);
-
     while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
         addInAscendingOrder(&indexesList, index);
     }
+
+    clearStack(&top);
+    long int address;
+    fseek(ws, 0L, SEEK_SET);
+    while (fread(&address, sizeof(long int), 1, ws) == 1) {
+        push(&top, address);
+    }
 }
 
-void finilize(FILE* ind) {
+void finilize(FILE* ind, FILE* ws) {
     tNode* current = indexesList;
-
     fseek(ind, 0L, SEEK_SET);
-
     while (current != NULL) {
         fwrite(&(current->index), sizeof(struct tIndex), 1, ind);
 
         current = current->next;
     }
-
     clearList(&indexesList);
+
+    long int address;
+    fseek(ws, 0L, SEEK_SET);
+    while (!isEmpty(top)) {
+        address = pop(&top);
+        fwrite(&address, sizeof(long int), 1, ws);
+    }
 }
 
 void insert_m(FILE* fl) {
