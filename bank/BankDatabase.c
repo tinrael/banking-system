@@ -56,7 +56,12 @@ void insert_m(FILE* fl) {
     struct tIndex index;
     index.id = customerContainer.customer.id;
 
-    fseek(fl, 0L, SEEK_END);
+    if (!isEmpty(addressesOfEmptyBlocks)) {
+        long int addressOfEmptyBlock = pop(&addressesOfEmptyBlocks);
+        fseek(fl, addressOfEmptyBlock, SEEK_SET);
+    } else {
+        fseek(fl, 0L, SEEK_END);
+    }
     index.address = ftell(fl);
     fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
 
