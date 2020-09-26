@@ -28,6 +28,16 @@ bool isEmpty(tElement* top) {
     return false;
 }
 
+void clearStack(tElement** top) {
+    tElement* toDelete;
+    while ((*top) != NULL) {
+        toDelete = *top;
+        *top = (*top)->next;
+
+        free(toDelete);
+    }
+}
+
 void printStack(tElement* top) {
     while(top != NULL) {
         printf("%ld ", top->address);

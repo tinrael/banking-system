@@ -20,6 +20,11 @@ long int pop(tElement** top);
 // checks whether the stack is empty
 bool isEmpty(tElement* top);
 
+/* Erases (free) all elements.
+ * The top pointer (*top) is equal to NULL after this operation.
+ */
+void clearStack(tElement** top);
+
 void printStack(tElement* top);
 
 #endif // STACK_H_INCLUDED
