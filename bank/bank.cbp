@@ -39,6 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="DoublyLinkedList.h" />
+		<Unit filename="Stack.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Stack.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
