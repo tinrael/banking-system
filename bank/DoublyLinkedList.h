@@ -73,6 +73,24 @@ void addInAscendingOrder(tNode** head, struct tIndex index) {
     }
 }
 
+/* Searches for the list element, which contains structure tIndex with the id equal to 'customerId'.
+ * If tNode::tIndex::id is equal to 'customerId', returns true
+ * and copy the found tIndex structure to the memory pointed by 'index'.
+ * Otherwise, returns false.
+ */
+bool findIndex(tNode* head, struct tIndex* index, int customerId) {
+    while (head != NULL) {
+        if ((head->index).id == customerId) {
+            (*index) = head->index;
+            return true;
+        }
+
+        head = head->next;
+    }
+
+    return false;
+}
+
 // erases (free) the list node pointed at by toDelete
 void deleteListNode(tNode** head, tNode* toDelete) {
     if ((*head) != NULL && toDelete != NULL) {
