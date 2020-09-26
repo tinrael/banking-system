@@ -33,7 +33,9 @@ void eraseFromList(tNode** head, int indexId);
 
 void printList(tNode* head);
 
-// erases (free) all elements
+/* Erases (free) all elements.
+ * The list head (*head) is equal to NULL after this operation.
+ */
 void clearList(tNode** head);
 
 #endif // DOUBLYLINKEDLIST_H_INCLUDED
