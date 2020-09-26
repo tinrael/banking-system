@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 tNode* indexesList = NULL;
-tElement* top = NULL;
+tElement* addressesOfEmptyBlocks = NULL;
 
 void initialize(FILE* ind, FILE* ws) {
     clearList(&indexesList);
@@ -14,11 +14,11 @@ void initialize(FILE* ind, FILE* ws) {
         addInAscendingOrder(&indexesList, index);
     }
 
-    clearStack(&top);
+    clearStack(&addressesOfEmptyBlocks);
     long int address;
     fseek(ws, 0L, SEEK_SET);
     while (fread(&address, sizeof(long int), 1, ws) == 1) {
-        push(&top, address);
+        push(&addressesOfEmptyBlocks, address);
     }
 }
 
@@ -34,8 +34,8 @@ void finilize(FILE* ind, FILE* ws) {
 
     long int address;
     fseek(ws, 0L, SEEK_SET);
-    while (!isEmpty(top)) {
-        address = pop(&top);
+    while (!isEmpty(addressesOfEmptyBlocks)) {
+        address = pop(&addressesOfEmptyBlocks);
         fwrite(&address, sizeof(long int), 1, ws);
     }
 }
