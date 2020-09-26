@@ -14,6 +14,20 @@ void initialize(FILE* ind) {
     }
 }
 
+void finilize(FILE* ind) {
+    tNode* current = indexesList;
+
+    fseek(ind ,0L, SEEK_SET);
+
+    while (current != NULL) {
+        fwrite(&(current->index), sizeof(struct tIndex), 1, ind);
+
+        current = current->next;
+    }
+
+    clearList(&indexesList);
+}
+
 void insert_m(FILE* fl) {
     struct tCustomerContainer customerContainer;
     customerContainer.isDeleted = false;

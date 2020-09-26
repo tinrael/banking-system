@@ -25,8 +25,11 @@ struct tIndex {
     long int address; // the address of the corresponding customer in the database
 };
 
-// upload indexes from the file to the memory
+// read indexes from the file to the RAM
 void initialize(FILE* ind);
+
+// write indexes from the RAM to the disk file and free the RAM, occupied by these indexes
+void finilize(FILE* ind);
 
 void insert_m(FILE* fl);
 
