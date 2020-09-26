@@ -1,20 +1,21 @@
 #ifndef DOUBLYLINKEDLIST_H_INCLUDED
 #define DOUBLYLINKEDLIST_H_INCLUDED
 
+#include "Bank.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 typedef struct tagNode {
-    int key;
+    struct tIndex index;
 
     struct tagNode* next;
     struct tagNode* prev;
 } tNode;
 
 // inserts an element to the beginning
-void addToBeginning(tNode** head, int key) {
+void addToBeginning(tNode** head, struct tIndex index) {
     tNode* newOne = (tNode*) malloc(sizeof(tNode));
-    newOne->key = key;
+    newOne->index = index;
 
     newOne->next = *head;
     newOne->prev = NULL;
@@ -28,11 +29,12 @@ void addToBeginning(tNode** head, int key) {
 
 /* TODO: need code refactoring.
  *
- * inserts an element in the ascending order (from the smallest to the largest)
+ * inserts an element in the ascending order by the index's ID  (tNode::index::id)
+ * (from the smallest to the largest)
  */
-void addInAscendingOrder(tNode** head, int key) {
+void addInAscendingOrder(tNode** head, struct tIndex index) {
     tNode* newOne = (tNode*) malloc(sizeof(tNode));
-    newOne->key = key;
+    newOne->index = index;
 
     if ((*head) == NULL) {
         newOne->next = NULL;
@@ -43,7 +45,7 @@ void addInAscendingOrder(tNode** head, int key) {
 
     tNode* current = *head;
     while (current != NULL) {
-        if (current->key > key) {
+        if ((current->index).id > index.id) {
             newOne->next = current;
             newOne->prev = current->prev;
 
@@ -90,11 +92,11 @@ void deleteListNode(tNode** head, tNode* toDelete) {
     }
 }
 
-// erases (free) the element with the key 'key'
-void eraseFromList(tNode** head, int key) {
+// erases (free) the element, which contains structure tIndex with the id 'indexId'
+void eraseFromList(tNode** head, int indexId) {
     tNode* current = *head;
     while (current != NULL) {
-        if (current->key == key) {
+        if ((current->index).id == indexId) {
             deleteListNode(head, current);
             return;
         }
@@ -104,7 +106,7 @@ void eraseFromList(tNode** head, int key) {
 
 void printList(tNode* head) {
     while (head != NULL) {
-        printf("%d -> ", head->key);
+        printf("%d -> ", (head->index).id);
         head = head->next;
     }
     printf("\n");
