@@ -25,6 +25,9 @@ struct tIndex {
     long int address; // the address of the corresponding customer in the database
 };
 
+// upload indexes from the file to the memory
+void initialize(FILE* ind);
+
 void insert_m(FILE* ind, FILE* fl);
 
 bool find_m(FILE* ind, struct tIndex* index, int customerId);

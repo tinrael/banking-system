@@ -1,5 +1,20 @@
 #include "Bank.h"
+#include "DoublyLinkedList.h"
 #include <stdlib.h>
+
+tNode* indexesList = NULL;
+
+void initialize(FILE* ind) {
+    struct tIndex index;
+
+    fseek(ind, 0L, SEEK_SET);
+
+    while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
+        addInAscendingOrder(&indexesList, index);
+    }
+
+    printList(indexesList);
+}
 
 void insert_m(FILE* ind, FILE* fl) {
     struct tCustomerContainer customerContainer;
