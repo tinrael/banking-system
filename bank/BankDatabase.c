@@ -121,6 +121,8 @@ void delete_m(FILE* ind, FILE* fl, int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
+        push(&addressesOfEmptyBlocks, index.address);
+
         struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
