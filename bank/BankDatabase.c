@@ -7,11 +7,13 @@ FILE* indexesFile = NULL;
 FILE* customersFile = NULL;
 FILE* customersEmptyBlocksFile = NULL;
 FILE* accountsFile = NULL;
+FILE* accountsEmptyBlocksFile = NULL;
 
 const char indexesFilename[] = "customers.ind";
 const char customersFilename[] = "customers.fl";
 const char customersEmptyBlocksFilename[] = "customers-empty-blocks.fl";
 const char accountsFilename[] = "accounts.fl";
+const char accountsEmptyBlocksFilename[] = "accounts-empty-blocks.fl";
 
 tNode* indexesList = NULL;
 tElement* addressesOfEmptyBlocks = NULL;
@@ -33,20 +35,20 @@ int initialize(int mode) {
 
     indexesFile = fopen(indexesFilename, filesMode);
     if (!indexesFile) {
-        fprintf(stderr, "Unable to open the file %s.\n", indexesFilename);
+        fprintf(stderr, "Unable to open the file %s\n", indexesFilename);
         return -1;
     }
 
     customersFile = fopen(customersFilename, filesMode);
     if (!customersFile) {
-        fprintf(stderr, "Unable to open the file %s.\n", customersFilename);
+        fprintf(stderr, "Unable to open the file %s\n", customersFilename);
         fclose(indexesFile);
         return -1;
     }
 
     customersEmptyBlocksFile = fopen(customersEmptyBlocksFilename, filesMode);
     if (!customersEmptyBlocksFile) {
-        fprintf(stderr, "Unable to open the file %s.\n", customersEmptyBlocksFilename);
+        fprintf(stderr, "Unable to open the file %s\n", customersEmptyBlocksFilename);
         fclose(customersFile);
         fclose(indexesFile);
         return -1;
@@ -54,7 +56,17 @@ int initialize(int mode) {
 
     accountsFile = fopen(accountsFilename, filesMode);
     if (!accountsFile) {
-        fprintf(stderr, "Unable to open the file %s.\n", accountsFilename);
+        fprintf(stderr, "Unable to open the file %s\n", accountsFilename);
+        fclose(customersEmptyBlocksFile);
+        fclose(customersFile);
+        fclose(indexesFile);
+        return -1;
+    }
+
+    accountsEmptyBlocksFile = fopen(accountsEmptyBlocksFilename, filesMode);
+    if (!accountsEmptyBlocksFile) {
+        fprintf(stderr, "Unable to open the file %s\n", accountsEmptyBlocksFilename);
+        fclose(accountsFile);
         fclose(customersEmptyBlocksFile);
         fclose(customersFile);
         fclose(indexesFile);
@@ -87,6 +99,7 @@ int finalize() {
     fclose(customersFile);
     fclose(customersEmptyBlocksFile);
     fclose(accountsFile);
+    fclose(accountsEmptyBlocksFile);
 
     FILE* indTempFile = fopen("indexes.tmp", "wb");
 
