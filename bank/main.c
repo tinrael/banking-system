@@ -2,7 +2,12 @@
 #include <stdio.h>
 
 int main() {
-    initialize(1);
+    int status = initialize(1);
+    if (status == -1) {
+        fprintf(stderr, "The initial setup of the database is failed.\n");
+        return -1;
+    }
+
     ut_m();
 
     int id;
@@ -12,6 +17,11 @@ int main() {
         get_m(id);
     }
 
-    finilize();
+    status = finalize();
+    if (status == -1) {
+        fprintf(stderr, "The database has ended with errors.\n");
+        return -1;
+    }
+
     return 0;
 }
