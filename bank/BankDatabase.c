@@ -6,10 +6,12 @@
 FILE* indexesFile = NULL;
 FILE* customersFile = NULL;
 FILE* customersEmptyBlocksFile = NULL;
+FILE* accountsFile = NULL;
 
 const char indexesFilename[] = "customers.ind";
 const char customersFilename[] = "customers.fl";
 const char customersEmptyBlocksFilename[] = "customers-empty-blocks.fl";
+const char accountsFilename[] = "accounts.fl";
 
 tNode* indexesList = NULL;
 tElement* addressesOfEmptyBlocks = NULL;
@@ -45,6 +47,15 @@ int initialize(int mode) {
     customersEmptyBlocksFile = fopen(customersEmptyBlocksFilename, filesMode);
     if (!customersEmptyBlocksFile) {
         fprintf(stderr, "Unable to open the file %s.\n", customersEmptyBlocksFilename);
+        fclose(customersFile);
+        fclose(indexesFile);
+        return -1;
+    }
+
+    accountsFile = fopen(accountsFilename, filesMode);
+    if (!accountsFile) {
+        fprintf(stderr, "Unable to open the file %s.\n", accountsFilename);
+        fclose(customersEmptyBlocksFile);
         fclose(customersFile);
         fclose(indexesFile);
         return -1;
