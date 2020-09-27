@@ -23,20 +23,51 @@ void initialize(FILE* ind, FILE* ws) {
 }
 
 void finilize(FILE* ind, FILE* ws) {
-    tNode* current = indexesList;
-    fseek(ind, 0L, SEEK_SET);
-    while (current != NULL) {
-        fwrite(&(current->index), sizeof(struct tIndex), 1, ind);
+    FILE* indTempFile = fopen("indexes.tmp", "wb");
 
+    tNode* current = indexesList;
+    while (current != NULL) {
+        fwrite(&(current->index), sizeof(struct tIndex), 1, indTempFile);
         current = current->next;
     }
     clearList(&indexesList);
 
+    fclose(indTempFile);
+    fclose(ind);
+
+    int status = remove("customers.ind");
+    if (status) {
+        fprintf(stderr,
+                "Unable to remove the file 'customers.ind'.\n");
+    }
+
+    status = rename("indexes.tmp", "customers.ind");
+    if (status) {
+        fprintf(stderr,
+                "Unable to rename the file from 'indexes.tmp' to 'customers.ind'.\n");
+    }
+
+    FILE* wsTempFile = fopen("waste.tmp", "wb");
+
     long int address;
-    fseek(ws, 0L, SEEK_SET);
     while (!isEmpty(addressesOfEmptyBlocks)) {
         address = pop(&addressesOfEmptyBlocks);
-        fwrite(&address, sizeof(long int), 1, ws);
+        fwrite(&address, sizeof(long int), 1, wsTempFile);
+    }
+
+    fclose(wsTempFile);
+    fclose(ws);
+
+    status = remove("waste.fl");
+    if (status) {
+        fprintf(stderr,
+                "Unable to remove the file 'waste.fl'.\n");
+    }
+
+    status = rename("waste.tmp", "waste.fl");
+    if (status) {
+        fprintf(stderr,
+                "Unable to rename the file from 'waste.tmp' to 'waste.fl'.\n");
     }
 }
 
