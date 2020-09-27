@@ -3,26 +3,79 @@
 #include "Stack.h"
 #include <stdlib.h>
 
+FILE* indexesFile = NULL;
+FILE* customersFile = NULL;
+FILE* customersEmptyBlocksFile = NULL;
+
+const char indexesFilename[] = "customers.ind";
+const char customersFilename[] = "customers.fl";
+const char customersEmptyBlocksFilename[] = "customers-empty-blocks.fl";
+
 tNode* indexesList = NULL;
 tElement* addressesOfEmptyBlocks = NULL;
 
-void initialize(FILE* ind, FILE* ws) {
+int initialize(int mode) {
+    char* filesMode;
+    switch (mode) {
+    case 0: // starts a new database
+        filesMode = "wb+";
+        break;
+
+    case 1: // opens the existing database
+        filesMode = "rb+";
+        break;
+
+    default:
+        return -1;
+    }
+
+    indexesFile = fopen(indexesFilename, filesMode);
+    if (!indexesFile) {
+        fprintf(stderr, "Unable to open the file %s.\n", indexesFilename);
+        return -1;
+    }
+
+    customersFile = fopen(customersFilename, filesMode);
+    if (!customersFile) {
+        fprintf(stderr, "Unable to open the file %s.\n", customersFilename);
+        fclose(indexesFile);
+        return -1;
+    }
+
+    customersEmptyBlocksFile = fopen(customersEmptyBlocksFilename, filesMode);
+    if (!customersEmptyBlocksFile) {
+        fprintf(stderr, "Unable to open the file %s.\n", customersEmptyBlocksFilename);
+        fclose(customersFile);
+        fclose(indexesFile);
+        return -1;
+    }
+
+    uploadData();
+
+    return 0;
+}
+
+void uploadData() {
     clearList(&indexesList);
     struct tIndex index;
-    fseek(ind, 0L, SEEK_SET);
-    while (fread(&index, sizeof(struct tIndex), 1, ind) == 1) {
+    fseek(indexesFile, 0L, SEEK_SET);
+    while (fread(&index, sizeof(struct tIndex), 1, indexesFile) == 1) {
         addInAscendingOrder(&indexesList, index);
     }
 
     clearStack(&addressesOfEmptyBlocks);
     long int address;
-    fseek(ws, 0L, SEEK_SET);
-    while (fread(&address, sizeof(long int), 1, ws) == 1) {
+    fseek(customersEmptyBlocksFile, 0L, SEEK_SET);
+    while (fread(&address, sizeof(long int), 1, customersEmptyBlocksFile) == 1) {
         push(&addressesOfEmptyBlocks, address);
     }
 }
 
-void finilize(FILE* ind, FILE* ws) {
+int finilize() {
+    fclose(indexesFile);
+    fclose(customersFile);
+    fclose(customersEmptyBlocksFile);
+
     FILE* indTempFile = fopen("indexes.tmp", "wb");
 
     tNode* current = indexesList;
@@ -33,45 +86,53 @@ void finilize(FILE* ind, FILE* ws) {
     clearList(&indexesList);
 
     fclose(indTempFile);
-    fclose(ind);
 
-    int status = remove("customers.ind");
+    int status = remove(indexesFilename);
     if (status) {
         fprintf(stderr,
-                "Unable to remove the file 'customers.ind'.\n");
+                "Unable to remove the file %s.\n", indexesFilename);
+
+        return -1;
     }
 
-    status = rename("indexes.tmp", "customers.ind");
+    status = rename("indexes.tmp", indexesFilename);
     if (status) {
         fprintf(stderr,
-                "Unable to rename the file from 'indexes.tmp' to 'customers.ind'.\n");
+                "Unable to rename the file from 'indexes.tmp' to %s'.\n", indexesFilename);
+
+        return -1;
     }
 
-    FILE* wsTempFile = fopen("waste.tmp", "wb");
+    FILE* emptyBlocksTempFile = fopen("customers-empty-blocks.tmp", "wb");
 
     long int address;
     while (!isEmpty(addressesOfEmptyBlocks)) {
         address = pop(&addressesOfEmptyBlocks);
-        fwrite(&address, sizeof(long int), 1, wsTempFile);
+        fwrite(&address, sizeof(long int), 1, emptyBlocksTempFile);
     }
 
-    fclose(wsTempFile);
-    fclose(ws);
+    fclose(emptyBlocksTempFile);
 
-    status = remove("waste.fl");
+    status = remove(customersEmptyBlocksFilename);
     if (status) {
         fprintf(stderr,
-                "Unable to remove the file 'waste.fl'.\n");
+                "Unable to remove the file %s.\n", customersEmptyBlocksFilename);
+
+        return -1;
     }
 
-    status = rename("waste.tmp", "waste.fl");
+    status = rename("customers-empty-blocks.tmp", customersEmptyBlocksFilename);
     if (status) {
         fprintf(stderr,
-                "Unable to rename the file from 'waste.tmp' to 'waste.fl'.\n");
+                "Unable to rename the file from 'waste.tmp' to %s.\n", customersEmptyBlocksFilename);
+
+        return -1;
     }
+
+    return 0;
 }
 
-void insert_m(FILE* fl) {
+void insert_m() {
     struct tCustomerContainer customerContainer;
     customerContainer.isDeleted = false;
 
@@ -89,12 +150,13 @@ void insert_m(FILE* fl) {
 
     if (!isEmpty(addressesOfEmptyBlocks)) {
         long int addressOfEmptyBlock = pop(&addressesOfEmptyBlocks);
-        fseek(fl, addressOfEmptyBlock, SEEK_SET);
+        fseek(customersFile, addressOfEmptyBlock, SEEK_SET);
     } else {
-        fseek(fl, 0L, SEEK_END);
+        fseek(customersFile, 0L, SEEK_END);
     }
-    index.address = ftell(fl);
-    fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+
+    index.address = ftell(customersFile);
+    fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
     addInAscendingOrder(&indexesList, index);
 }
@@ -103,14 +165,14 @@ bool find_m(struct tIndex* index, int customerId) {
     return findIndex(indexesList, index, customerId);
 }
 
-void get_m(FILE* fl, int customerId) {
+void get_m(int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
-        fseek(fl, index.address, SEEK_SET);
-        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
         printf("%d %s %s\n",
                customerContainer.customer.id,
@@ -121,14 +183,14 @@ void get_m(FILE* fl, int customerId) {
     }
 }
 
-void update_m(FILE* fl, int customerId) {
+void update_m(int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
-        fseek(fl, index.address, SEEK_SET);
-        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
         printf("Updating %d %s %s:\n",
                customerContainer.customer.id,
@@ -141,26 +203,26 @@ void update_m(FILE* fl, int customerId) {
         printf("Last Name: ");
         scanf("%63s", customerContainer.customer.lastName);
 
-        fseek(fl, index.address, SEEK_SET);
-        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+        fseek(customersFile, index.address, SEEK_SET);
+        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
     } else {
         printf("Not found.\n");
     }
 }
 
-void delete_m(FILE* fl, int customerId) {
+void delete_m(int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
         struct tCustomerContainer customerContainer;
 
-        fseek(fl, index.address, SEEK_SET);
-        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
         customerContainer.isDeleted = true;
 
-        fseek(fl, index.address, SEEK_SET);
-        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+        fseek(customersFile, index.address, SEEK_SET);
+        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
         push(&addressesOfEmptyBlocks, index.address);
         eraseFromList(&indexesList, index.id);
@@ -169,13 +231,13 @@ void delete_m(FILE* fl, int customerId) {
     }
 }
 
-void ut_m(FILE* fl) {
+void ut_m() {
     struct tCustomerContainer customerContainer;
-    fseek(fl, 0L, SEEK_SET);
+    fseek(customersFile, 0L, SEEK_SET);
     printf("\t------------------------------------\n");
     printf("\tStatus | ID | First Name | Last Name\n");
     printf("\t------------------------------------\n");
-    while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl) == 1) {
+    while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile) == 1) {
         printf(customerContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
         printf("%d %s %s\n",
                customerContainer.customer.id,

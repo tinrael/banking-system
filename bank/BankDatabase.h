@@ -25,22 +25,40 @@ struct tIndex {
     long int address; // the address of the corresponding customer in the database
 };
 
-// read indexes from the file to the RAM
-void initialize(FILE* ind, FILE* ws);
+/* Starts the work with the database.
+ * Returns 0 on success starting. Otherwise, returns -1.
+ *
+ * 'mode' parameter defines in which mode starts the database:
+ * 0 - to start a new database,
+ * 1 - to open the existing database (database files must exist).
+ *
+ * Opens database files.
+ * Uploads the data from disk files to RAM.
+ */
+int initialize(int mode);
 
-// write indexes from the RAM to the disk file and free the RAM, occupied by these indexes
-void finilize(FILE* ind, FILE* ws);
+// reads addresses of empty blocks and indexes from the file to the RAM
+void uploadData();
 
-void insert_m(FILE* fl);
+/* Finishes the work with the database.
+ * Returns 0 on success finishing. Otherwise, returns -1.
+ *
+ * Writes addresses of empty blocks and indexes from the RAM to disk files.
+ * Frees the RAM, occupied by these addresses of empty blocks and indexes.
+ * Closes all opened by database files.
+ */
+int finilize();
+
+void insert_m();
 
 bool find_m(struct tIndex* index, int customerId);
 
-void get_m(FILE* fl, int customerId);
+void get_m(int customerId);
 
-void update_m(FILE* fl, int customerId);
+void update_m(int customerId);
 
-void delete_m(FILE* fl, int customerId);
+void delete_m(int customerId);
 
-void ut_m(FILE* fl);
+void ut_m();
 
 #endif // BANKDATABASE_H_INCLUDED
