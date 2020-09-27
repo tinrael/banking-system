@@ -86,6 +86,7 @@ int finalize() {
     fclose(indexesFile);
     fclose(customersFile);
     fclose(customersEmptyBlocksFile);
+    fclose(accountsFile);
 
     FILE* indTempFile = fopen("indexes.tmp", "wb");
 
