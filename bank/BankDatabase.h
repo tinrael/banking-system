@@ -39,7 +39,7 @@ void get_m(FILE* fl, int customerId);
 
 void update_m(FILE* fl, int customerId);
 
-void delete_m(FILE* ind, FILE* fl, int customerId);
+void delete_m(FILE* fl, int customerId);
 
 void ut_m(FILE* fl);
 
