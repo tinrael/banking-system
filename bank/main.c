@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int main() {
-    int status = initialize(1);
+    int status = initialize(0);
     if (status == -1) {
         fprintf(stderr, "The initial setup of the database is failed.\n");
         return -1;
