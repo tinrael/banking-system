@@ -2,30 +2,16 @@
 #include <stdio.h>
 
 int main() {
-    FILE* ind = fopen("customers.ind", "wb+");
-    if (!ind) {
-        fprintf(stderr, "Unable to open the file.\n");
-        return -1;
-    }
-
-    FILE* fl = fopen("customers.fl", "wb+");
-    if (!fl) {
-        fprintf(stderr, "Unable to open the file.\n");
-        fclose(ind);
-        return -1;
-    }
-
-    initialize(ind);
+    initialize(1);
+    ut_m();
 
     int id;
-    printf("Search | ID: ");
-    scanf("%d", &id);
-    get_m(fl, id);
+    for (int i = 0; i < 10; i++) {
+        printf("Search | ID: ");
+        scanf("%d", &id);
+        get_m(id);
+    }
 
-    finilize(ind);
-
-    fclose(fl);
-    fclose(ind);
-
+    finilize();
     return 0;
 }
