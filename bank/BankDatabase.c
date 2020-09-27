@@ -117,12 +117,10 @@ void update_m(FILE* fl, int customerId) {
     }
 }
 
-void delete_m(FILE* ind, FILE* fl, int customerId) {
+void delete_m(FILE* fl, int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
-        push(&addressesOfEmptyBlocks, index.address);
-
         struct tCustomerContainer customerContainer;
 
         fseek(fl, index.address, SEEK_SET);
@@ -132,6 +130,9 @@ void delete_m(FILE* ind, FILE* fl, int customerId) {
 
         fseek(fl, index.address, SEEK_SET);
         fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, fl);
+
+        push(&addressesOfEmptyBlocks, index.address);
+        eraseFromList(&indexesList, index.id);
     } else {
         printf("Not found.\n");
     }
@@ -140,8 +141,11 @@ void delete_m(FILE* ind, FILE* fl, int customerId) {
 void ut_m(FILE* fl) {
     struct tCustomerContainer customerContainer;
     fseek(fl, 0L, SEEK_SET);
+    printf("\t------------------------------------\n");
+    printf("\tStatus | ID | First Name | Last Name\n");
+    printf("\t------------------------------------\n");
     while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl) == 1) {
-        printf(customerContainer.isDeleted ? "[deleted] " : "[exists] ");
+        printf(customerContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
         printf("%d %s %s\n",
                customerContainer.customer.id,
                customerContainer.customer.firstName,
