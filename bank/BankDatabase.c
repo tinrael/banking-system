@@ -71,7 +71,7 @@ void uploadData() {
     }
 }
 
-int finilize() {
+int finalize() {
     fclose(indexesFile);
     fclose(customersFile);
     fclose(customersEmptyBlocksFile);

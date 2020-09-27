@@ -47,7 +47,7 @@ void uploadData();
  * Frees the RAM, occupied by these addresses of empty blocks and indexes.
  * Closes all opened by database files.
  */
-int finilize();
+int finalize();
 
 void insert_m();
 
