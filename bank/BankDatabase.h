@@ -41,4 +41,6 @@ void update_m(FILE* fl, int customerId);
 
 void delete_m(FILE* ind, FILE* fl, int customerId);
 
+void ut_m(FILE* fl);
+
 #endif // BANKDATABASE_H_INCLUDED

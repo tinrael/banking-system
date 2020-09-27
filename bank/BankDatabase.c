@@ -136,3 +136,15 @@ void delete_m(FILE* ind, FILE* fl, int customerId) {
         printf("Not found.\n");
     }
 }
+
+void ut_m(FILE* fl) {
+    struct tCustomerContainer customerContainer;
+    fseek(fl, 0L, SEEK_SET);
+    while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, fl) == 1) {
+        printf(customerContainer.isDeleted ? "[deleted] " : "[exists] ");
+        printf("%d %s %s\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName);
+    }
+}
