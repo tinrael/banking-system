@@ -161,6 +161,9 @@ void insert_m() {
     struct tCustomerContainer customerContainer;
     customerContainer.isDeleted = false;
 
+    customerContainer.numberOfAccounts = 0;
+    customerContainer.addressOfAccountsListHead = -1L;
+
     printf("ID: ");
     scanf("%d", &(customerContainer.customer.id));
 
@@ -259,14 +262,16 @@ void delete_m(int customerId) {
 void ut_m() {
     struct tCustomerContainer customerContainer;
     fseek(customersFile, 0L, SEEK_SET);
-    printf("\t------------------------------------\n");
-    printf("\tStatus | ID | First Name | Last Name\n");
-    printf("\t------------------------------------\n");
+    printf("\t-----------------------------------------------------------------------------------------\n");
+    printf("\tStatus | ID | First Name | Last Name | Number Of Accounts | Address Of Accounts List Head\n");
+    printf("\t-----------------------------------------------------------------------------------------\n");
     while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile) == 1) {
         printf(customerContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
-        printf("%d %s %s\n",
+        printf("%d %s %s %u %ld\n",
                customerContainer.customer.id,
                customerContainer.customer.firstName,
-               customerContainer.customer.lastName);
+               customerContainer.customer.lastName,
+               customerContainer.numberOfAccounts,
+               customerContainer.addressOfAccountsListHead);
     }
 }

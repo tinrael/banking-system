@@ -12,7 +12,11 @@ struct tCustomer {
 
 struct tCustomerContainer {
     bool isDeleted; // identify if the record is logically deleted
+
     struct tCustomer customer;
+
+    unsigned int numberOfAccounts; // number of customer's bank accounts
+    long int addressOfAccountsListHead; // the address of the head node in the accounts list
 };
 
 struct tAccount {
