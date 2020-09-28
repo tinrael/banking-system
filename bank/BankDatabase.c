@@ -17,6 +17,7 @@ const char accountsEmptyBlocksFilename[] = "accounts-empty-blocks.fl";
 
 tNode* indexesList = NULL;
 tElement* addressesOfCustomersEmptyBlocks = NULL;
+tElement* addressesOfAccountsEmptyBlocks = NULL;
 
 int initialize(int mode) {
     char* filesMode;
@@ -86,11 +87,18 @@ void uploadData() {
         addInAscendingOrder(&indexesList, index);
     }
 
-    clearStack(&addressesOfCustomersEmptyBlocks);
     long int address;
+
+    clearStack(&addressesOfCustomersEmptyBlocks);
     fseek(customersEmptyBlocksFile, 0L, SEEK_SET);
     while (fread(&address, sizeof(long int), 1, customersEmptyBlocksFile) == 1) {
         push(&addressesOfCustomersEmptyBlocks, address);
+    }
+
+    clearStack(&addressesOfAccountsEmptyBlocks);
+    fseek(accountsEmptyBlocksFile, 0L, SEEK_SET);
+    while (fread(&address, sizeof(long int), 1, accountsEmptyBlocksFile) == 1) {
+        push(&addressesOfAccountsEmptyBlocks, address);
     }
 }
 
