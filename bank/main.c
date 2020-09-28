@@ -8,13 +8,99 @@ int main() {
         return -1;
     }
 
-    ut_m();
+    printf("-1 - exit\n");
+    printf("0 - insert_m\n");
+    printf("1 - insert_s\n");
+    printf("2 - get_m\n");
+    printf("3 - del_m\n");
+    printf("4 - del_s\n");
+    printf("5 - update_m\n");
+    printf("6 - ut_m\n");
+    printf("7 - ut_s\n");
+    printf("8 - see options\n\n");
 
-    int id;
-    for (int i = 0; i < 10; i++) {
-        printf("Search | ID: ");
-        scanf("%d", &id);
-        get_m(id);
+    int option;
+    int customerId;
+    int accountNumber;
+
+    while (true) {
+        printf("Choose an option (-1 to exit | 8 to see options): ");
+        scanf("%d", &option);
+
+        if (option == -1) {
+            break;
+        }
+
+        switch (option) {
+        case 0:
+            printf("[insert_m]\n");
+            insert_m();
+            break;
+
+        case 1:
+            printf("[insert_s]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            insert_s(customerId);
+            break;
+
+        case 2:
+            printf("[get_m]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            get_m(customerId);
+            break;
+
+        case 3:
+            printf("[del_m]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            del_m(customerId);
+            break;
+
+        case 4:
+            printf("[del_s]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            printf("Account Number: ");
+            scanf("%d", &accountNumber);
+            del_s(customerId, accountNumber);
+            break;
+
+        case 5:
+            printf("[update_m]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            update_m(customerId);
+            break;
+
+        case 6:
+            printf("[ut_m]\n");
+            ut_m();
+            break;
+
+        case 7:
+            printf("[ut_s]\n");
+            ut_s();
+            break;
+
+        case 8:
+            printf("-1 - exit\n");
+            printf("0 - insert_m\n");
+            printf("1 - insert_s\n");
+            printf("2 - get_m\n");
+            printf("3 - del_m\n");
+            printf("4 - del_s\n");
+            printf("5 - update_m\n");
+            printf("6 - ut_m\n");
+            printf("7 - ut_s\n");
+            printf("8 - see options\n\n");
+            break;
+
+        default:
+            printf("[!] Incorrect input. Try again\n");
+        }
+
     }
 
     status = finalize();
