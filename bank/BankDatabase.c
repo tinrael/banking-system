@@ -311,7 +311,7 @@ void insert_s(int customerId) {
         fseek(customersFile, index.address, SEEK_SET);
         fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
     } else {
-        printf("Not found.\n");
+        printf("Not found customer with id %d\n", customerId);
     }
 }
 
@@ -327,5 +327,64 @@ void ut_s() {
                accountContainer.account.number,
                accountContainer.account.balance,
                accountContainer.addressOfNext);
+    }
+}
+
+void del_s(int customerId, int accountNumber) {
+    struct tIndex index;
+    if (find_m(&index, customerId)) {
+        struct tCustomerContainer customerContainer;
+
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
+
+        // address of the previous account container
+        long int prevAccountAddress = -1L;
+        // address of the current account container
+        long int curAccountAddress = customerContainer.addressOfAccountsListHead;
+
+        struct tAccountContainer accountContainer;
+        while (curAccountAddress != -1L) {
+            fseek(accountsFile, curAccountAddress, SEEK_SET);
+            fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+            if (accountContainer.account.number == accountNumber) {
+                long int addressOfNext = accountContainer.addressOfNext;
+
+                accountContainer.isDeleted = true;
+                fseek(accountsFile, curAccountAddress, SEEK_SET);
+                fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+                if (prevAccountAddress == -1L) {
+                    customerContainer.addressOfAccountsListHead = addressOfNext;
+                } else {
+                    fseek(accountsFile, prevAccountAddress, SEEK_SET);
+                    fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+                    accountContainer.addressOfNext = addressOfNext;
+
+                    fseek(accountsFile, prevAccountAddress, SEEK_SET);
+                    fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+                }
+
+                customerContainer.numberOfAccounts--;
+
+                fseek(customersFile, index.address, SEEK_SET);
+                fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
+
+                return;
+            }
+
+            prevAccountAddress = curAccountAddress;
+            curAccountAddress = accountContainer.addressOfNext;
+        }
+
+        printf("Customer [%d] %s %s does not have the account with number '%d'.\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName,
+               accountNumber);
+    } else {
+        printf("Not found customer with id %d.\n", customerId);
     }
 }

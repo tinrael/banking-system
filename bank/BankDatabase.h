@@ -75,6 +75,8 @@ void ut_m();
 
 void insert_s(int customerId);
 
+void del_s(int customerId, int accountNumber);
+
 void ut_s();
 
 #endif // BANKDATABASE_H_INCLUDED
