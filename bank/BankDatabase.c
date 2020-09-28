@@ -382,6 +382,48 @@ void insert_s(int customerId) {
     }
 }
 
+void update_s(int customerId, int accountNumber) {
+    struct tIndex index;
+    if (find_m(&index, customerId)) {
+        struct tCustomerContainer customerContainer;
+
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
+
+        long int curAccountAddress = customerContainer.addressOfAccountsListHead;
+
+        struct tAccountContainer accountContainer;
+        while (curAccountAddress != -1L) {
+            fseek(accountsFile, curAccountAddress, SEEK_SET);
+            fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+            if (accountContainer.account.number == accountNumber) {
+                printf("Updating the bank account Number: %d: Balance: %lf\n",
+                       accountContainer.account.number,
+                       accountContainer.account.balance);
+
+                printf("\tBalance: ");
+                scanf("%lf", &(accountContainer.account.balance));
+
+                fseek(accountsFile, curAccountAddress, SEEK_SET);
+                fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+                return;
+            }
+
+            curAccountAddress = accountContainer.addressOfNext;
+        }
+
+        printf("Customer [%d] %s %s does not have the account with number '%d'.\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName,
+               accountNumber);
+    } else {
+        printf("Not found customer with id %d\n", customerId);
+    }
+}
+
 void ut_s() {
     struct tAccountContainer accountContainer;
     fseek(accountsFile, 0L, SEEK_SET);

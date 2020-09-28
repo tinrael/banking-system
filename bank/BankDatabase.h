@@ -75,6 +75,8 @@ void ut_m();
 
 void insert_s(int customerId);
 
+void update_s(int customerId, int accountNumber);
+
 void del_s(int customerId, int accountNumber);
 
 // deletes all accounts starting from the head node with address 'addressOfAccountsListHead'
