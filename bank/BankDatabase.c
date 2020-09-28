@@ -211,21 +211,29 @@ void get_m(int customerId) {
 
         printf("\t\tAccounts:\n");
 
-        struct tAccountContainer accountContainer;
-        long int curAccountAddress = customerContainer.addressOfAccountsListHead;
-        while (curAccountAddress != -1L) {
-            fseek(accountsFile, curAccountAddress, SEEK_SET);
-            fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+        if (customerContainer.addressOfAccountsListHead == -1L) {
+            printf("\t\t\tAccounts not found.\n");
+        } else {
+            printf("\t\t\t----------------\n");
+            printf("\t\t\tNumber | Balance\n");
+            printf("\t\t\t----------------\n");
 
-            printf("\t\t\t%d %lf\n",
-               accountContainer.account.number,
-               accountContainer.account.balance);
+            struct tAccountContainer accountContainer;
+            long int curAccountAddress = customerContainer.addressOfAccountsListHead;
+            while (curAccountAddress != -1L) {
+                fseek(accountsFile, curAccountAddress, SEEK_SET);
+                fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
 
-            curAccountAddress = accountContainer.addressOfNext;
+                printf("\t\t\t%d %lf\n",
+                       accountContainer.account.number,
+                       accountContainer.account.balance);
+
+                curAccountAddress = accountContainer.addressOfNext;
+            }
         }
 
     } else {
-        printf("Not found.\n");
+        printf("Not found customer with id %d.\n", customerId);
     }
 }
 
@@ -252,7 +260,7 @@ void update_m(int customerId) {
         fseek(customersFile, index.address, SEEK_SET);
         fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
     } else {
-        printf("Not found.\n");
+        printf("Not found customer with id %d.\n", customerId);
     }
 }
 
@@ -276,7 +284,7 @@ void delete_m(int customerId) {
         push(&addressesOfEmptyBlocks, index.address);
         eraseFromList(&indexesList, index.id);
     } else {
-        printf("Not found.\n");
+        printf("Not found customer with id %d.\n", customerId);
     }
 }
 
@@ -288,7 +296,7 @@ void ut_m() {
     printf("\t-----------------------------------------------------------------------------------------\n");
     while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile) == 1) {
         printf(customerContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
-        printf("%d\t%s \t   %s \t\t %u \t\t\t %ld\n",
+        printf("%d \t %s \t %s \t %u \t %ld\n",
                customerContainer.customer.id,
                customerContainer.customer.firstName,
                customerContainer.customer.lastName,
@@ -342,7 +350,7 @@ void ut_s() {
     printf("\t-----------------------------------------------\n");
     while (fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile) == 1) {
         printf(accountContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
-        printf("%d\t%lf \t %ld\n",
+        printf("%d \t %lf \t %ld\n",
                accountContainer.account.number,
                accountContainer.account.balance,
                accountContainer.addressOfNext);
