@@ -15,16 +15,17 @@ int main() {
     printf("3 - del_m\n");
     printf("4 - del_s\n");
     printf("5 - update_m\n");
-    printf("6 - ut_m\n");
-    printf("7 - ut_s\n");
-    printf("8 - see options\n\n");
+    printf("6 - update_s\n");
+    printf("7 - ut_m\n");
+    printf("8 - ut_s\n");
+    printf("9 - see options\n\n");
 
     int option;
     int customerId;
     int accountNumber;
 
     while (true) {
-        printf("Choose an option (-1 to exit | 8 to see options): ");
+        printf("Choose an option (-1 to exit | 9 to see options): ");
         scanf("%d", &option);
 
         if (option == -1) {
@@ -75,16 +76,25 @@ int main() {
             break;
 
         case 6:
+            printf("[update_s]\n");
+            printf("Customer ID: ");
+            scanf("%d", &customerId);
+            printf("Bank Account Number: ");
+            scanf("%d", &accountNumber);
+            update_s(customerId, accountNumber);
+            break;
+
+        case 7:
             printf("[ut_m]\n");
             ut_m();
             break;
 
-        case 7:
+        case 8:
             printf("[ut_s]\n");
             ut_s();
             break;
 
-        case 8:
+        case 9:
             printf("-1 - exit\n");
             printf("0 - insert_m\n");
             printf("1 - insert_s\n");
@@ -92,9 +102,10 @@ int main() {
             printf("3 - del_m\n");
             printf("4 - del_s\n");
             printf("5 - update_m\n");
-            printf("6 - ut_m\n");
-            printf("7 - ut_s\n");
-            printf("8 - see options\n\n");
+            printf("6 - update_s\n");
+            printf("7 - ut_m\n");
+            printf("8 - ut_s\n");
+            printf("9 - see options\n\n");
             break;
 
         default:
