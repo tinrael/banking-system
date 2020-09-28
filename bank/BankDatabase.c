@@ -323,7 +323,7 @@ void ut_s() {
     printf("\t-----------------------------------------------\n");
     while (fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile) == 1) {
         printf(accountContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
-        printf("%d %lf %ld\n",
+        printf("%d\t%lf \t %ld\n",
                accountContainer.account.number,
                accountContainer.account.balance,
                accountContainer.addressOfNext);
