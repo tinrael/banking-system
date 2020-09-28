@@ -313,3 +313,18 @@ void insert_s(int customerId) {
         printf("Not found.\n");
     }
 }
+
+void ut_s() {
+    struct tAccountContainer accountContainer;
+    fseek(accountsFile, 0L, SEEK_SET);
+    printf("\t-----------------------------------------------\n");
+    printf("\tStatus | Number | Balance | Address Of The Next\n");
+    printf("\t-----------------------------------------------\n");
+    while (fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile) == 1) {
+        printf(accountContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
+        printf("%d %lf %ld\n",
+               accountContainer.account.number,
+               accountContainer.account.balance,
+               accountContainer.addressOfNext);
+    }
+}
