@@ -269,7 +269,7 @@ void ut_m() {
     printf("\t-----------------------------------------------------------------------------------------\n");
     while (fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile) == 1) {
         printf(customerContainer.isDeleted ? "\t[deleted] " : "\t[exists] ");
-        printf("%d %s %s %u %ld\n",
+        printf("%d\t%s \t   %s \t\t %u \t\t\t %ld\n",
                customerContainer.customer.id,
                customerContainer.customer.firstName,
                customerContainer.customer.lastName,
@@ -306,6 +306,7 @@ void insert_s(int customerId) {
         fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
 
         customerContainer.addressOfAccountsListHead = addressOfNewAccount;
+        customerContainer.numberOfAccounts++;
 
         fseek(customersFile, index.address, SEEK_SET);
         fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
