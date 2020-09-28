@@ -87,18 +87,18 @@ void uploadData() {
         addInAscendingOrder(&indexesList, index);
     }
 
-    long int address;
-
+    long int addressOfCustomersEmptyBlock;
     clearStack(&addressesOfCustomersEmptyBlocks);
     fseek(customersEmptyBlocksFile, 0L, SEEK_SET);
-    while (fread(&address, sizeof(long int), 1, customersEmptyBlocksFile) == 1) {
-        push(&addressesOfCustomersEmptyBlocks, address);
+    while (fread(&addressOfCustomersEmptyBlock, sizeof(long int), 1, customersEmptyBlocksFile) == 1) {
+        push(&addressesOfCustomersEmptyBlocks, addressOfCustomersEmptyBlock);
     }
 
+    long int addressOfAccountsEmptyBlock;
     clearStack(&addressesOfAccountsEmptyBlocks);
     fseek(accountsEmptyBlocksFile, 0L, SEEK_SET);
-    while (fread(&address, sizeof(long int), 1, accountsEmptyBlocksFile) == 1) {
-        push(&addressesOfAccountsEmptyBlocks, address);
+    while (fread(&addressOfAccountsEmptyBlock, sizeof(long int), 1, accountsEmptyBlocksFile) == 1) {
+        push(&addressesOfAccountsEmptyBlocks, addressOfAccountsEmptyBlock);
     }
 }
 
