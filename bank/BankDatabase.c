@@ -138,10 +138,10 @@ int finalize() {
 
     FILE* customersEmptyBlocksTempFile = fopen("customers-empty-blocks.tmp", "wb");
 
-    long int address;
+    long int addressOfCustomersEmptyBlock;
     while (!isEmpty(addressesOfCustomersEmptyBlocks)) {
-        address = pop(&addressesOfCustomersEmptyBlocks);
-        fwrite(&address, sizeof(long int), 1, customersEmptyBlocksTempFile);
+        addressOfCustomersEmptyBlock = pop(&addressesOfCustomersEmptyBlocks);
+        fwrite(&addressOfCustomersEmptyBlock, sizeof(long int), 1, customersEmptyBlocksTempFile);
     }
 
     fclose(customersEmptyBlocksTempFile);
@@ -157,7 +157,7 @@ int finalize() {
     status = rename("customers-empty-blocks.tmp", customersEmptyBlocksFilename);
     if (status) {
         fprintf(stderr,
-                "Unable to rename the file from 'waste.tmp' to %s.\n", customersEmptyBlocksFilename);
+                "Unable to rename the file from 'customers-empty-blocks.tmp' to %s.\n", customersEmptyBlocksFilename);
 
         return -1;
     }
