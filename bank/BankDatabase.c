@@ -204,10 +204,26 @@ void get_m(int customerId) {
         fseek(customersFile, index.address, SEEK_SET);
         fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
-        printf("%d %s %s\n",
+        printf("\t%d %s %s\n",
                customerContainer.customer.id,
                customerContainer.customer.firstName,
                customerContainer.customer.lastName);
+
+        printf("\t\tAccounts:\n");
+
+        struct tAccountContainer accountContainer;
+        long int curAccountAddress = customerContainer.addressOfAccountsListHead;
+        while (curAccountAddress != -1L) {
+            fseek(accountsFile, curAccountAddress, SEEK_SET);
+            fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+            printf("\t\t\t%d %lf\n",
+               accountContainer.account.number,
+               accountContainer.account.balance);
+
+            curAccountAddress = accountContainer.addressOfNext;
+        }
+
     } else {
         printf("Not found.\n");
     }
