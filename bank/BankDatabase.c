@@ -416,6 +416,7 @@ void del_s(int customerId, int accountNumber) {
             fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
 
             if (accountContainer.account.number == accountNumber) {
+                push(&addressesOfAccountsEmptyBlocks, curAccountAddress);
                 long int addressOfNext = accountContainer.addressOfNext;
 
                 accountContainer.isDeleted = true;
@@ -461,6 +462,8 @@ void del_all_s(long int addressOfAccountsListHead) {
 
     struct tAccountContainer accountContainer;
     while (curAccountAddress != -1L) {
+        push(&addressesOfAccountsEmptyBlocks, curAccountAddress);
+
         fseek(accountsFile, curAccountAddress, SEEK_SET);
         fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
 
