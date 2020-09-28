@@ -285,10 +285,10 @@ void update_m(int customerId) {
                customerContainer.customer.firstName,
                customerContainer.customer.lastName);
 
-        printf("First Name: ");
+        printf("\tFirst Name: ");
         scanf("%63s", customerContainer.customer.firstName);
 
-        printf("Last Name: ");
+        printf("\tLast Name: ");
         scanf("%63s", customerContainer.customer.lastName);
 
         fseek(customersFile, index.address, SEEK_SET);
