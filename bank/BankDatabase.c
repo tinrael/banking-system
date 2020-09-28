@@ -164,13 +164,15 @@ void insert_m() {
     customerContainer.numberOfAccounts = 0;
     customerContainer.addressOfAccountsListHead = -1L;
 
-    printf("ID: ");
+    printf("Add a new customer:\n");
+
+    printf("\tID: ");
     scanf("%d", &(customerContainer.customer.id));
 
-    printf("First Name: ");
+    printf("\tFirst Name: ");
     scanf("%63s", customerContainer.customer.firstName);
 
-    printf("Last Name: ");
+    printf("\tLast Name: ");
     scanf("%63s", customerContainer.customer.lastName);
 
     struct tIndex index;
@@ -273,5 +275,41 @@ void ut_m() {
                customerContainer.customer.lastName,
                customerContainer.numberOfAccounts,
                customerContainer.addressOfAccountsListHead);
+    }
+}
+
+void insert_s(int customerId) {
+    struct tIndex index;
+    if (find_m(&index, customerId)) {
+        struct tCustomerContainer customerContainer;
+
+        fseek(customersFile, index.address, SEEK_SET);
+        fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
+
+        struct tAccountContainer accountContainer;
+        accountContainer.isDeleted = false;
+        accountContainer.addressOfNext = customerContainer.addressOfAccountsListHead;
+
+        printf("Create a new bank account for [%d] %s %s:\n",
+               customerContainer.customer.id,
+               customerContainer.customer.firstName,
+               customerContainer.customer.lastName);
+
+        printf("\tNumber: ");
+        scanf("%d", &(accountContainer.account.number));
+
+        printf("\tBalance: ");
+        scanf("%lf", &(accountContainer.account.balance));
+
+        fseek(accountsFile, 0L, SEEK_END);
+        long int addressOfNewAccount = ftell(accountsFile);
+        fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+        customerContainer.addressOfAccountsListHead = addressOfNewAccount;
+
+        fseek(customersFile, index.address, SEEK_SET);
+        fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
+    } else {
+        printf("Not found.\n");
     }
 }
