@@ -362,7 +362,13 @@ void insert_s(int customerId) {
         printf("\tBalance: ");
         scanf("%lf", &(accountContainer.account.balance));
 
-        fseek(accountsFile, 0L, SEEK_END);
+        if (!isEmpty(addressesOfAccountsEmptyBlocks)) {
+            long int addressOfEmptyBlock = pop(&addressesOfAccountsEmptyBlocks);
+            fseek(accountsFile, addressOfEmptyBlock, SEEK_SET);
+        } else {
+            fseek(accountsFile, 0L, SEEK_END);
+        }
+
         long int addressOfNewAccount = ftell(accountsFile);
         fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
 
