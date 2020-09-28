@@ -77,6 +77,9 @@ void insert_s(int customerId);
 
 void del_s(int customerId, int accountNumber);
 
+// deletes all accounts starting from the head node with address 'addressOfAccountsListHead'
+void del_all_s(long int addressOfAccountsListHead);
+
 void ut_s();
 
 #endif // BANKDATABASE_H_INCLUDED

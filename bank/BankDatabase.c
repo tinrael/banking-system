@@ -249,6 +249,9 @@ void delete_m(int customerId) {
         fseek(customersFile, index.address, SEEK_SET);
         fread(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
+        del_all_s(customerContainer.addressOfAccountsListHead);
+        customerContainer.addressOfAccountsListHead = -1L;
+        customerContainer.numberOfAccounts = 0;
         customerContainer.isDeleted = true;
 
         fseek(customersFile, index.address, SEEK_SET);
@@ -386,5 +389,22 @@ void del_s(int customerId, int accountNumber) {
                accountNumber);
     } else {
         printf("Not found customer with id %d.\n", customerId);
+    }
+}
+
+void del_all_s(long int addressOfAccountsListHead) {
+    long int curAccountAddress = addressOfAccountsListHead;
+
+    struct tAccountContainer accountContainer;
+    while (curAccountAddress != -1L) {
+        fseek(accountsFile, curAccountAddress, SEEK_SET);
+        fread(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+        accountContainer.isDeleted = true;
+
+        fseek(accountsFile, curAccountAddress, SEEK_SET);
+        fwrite(&accountContainer, sizeof(struct tAccountContainer), 1, accountsFile);
+
+        curAccountAddress = accountContainer.addressOfNext;
     }
 }
