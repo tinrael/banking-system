@@ -69,7 +69,7 @@ void get_m(int customerId);
 
 void update_m(int customerId);
 
-void delete_m(int customerId);
+void del_m(int customerId);
 
 void ut_m();
 

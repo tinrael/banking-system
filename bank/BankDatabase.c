@@ -264,7 +264,7 @@ void update_m(int customerId) {
     }
 }
 
-void delete_m(int customerId) {
+void del_m(int customerId) {
     struct tIndex index;
 
     if (find_m(&index, customerId)) {
