@@ -162,6 +162,32 @@ int finalize() {
         return -1;
     }
 
+    FILE* accountsEmptyBlocksTempFile = fopen("accounts-empty-blocks.tmp", "wb");
+
+    long int addressOfAccountsEmptyBlock;
+    while (!isEmpty(addressesOfAccountsEmptyBlocks)) {
+        addressOfAccountsEmptyBlock = pop(&addressesOfAccountsEmptyBlocks);
+        fwrite(&addressOfAccountsEmptyBlock, sizeof(long int), 1, accountsEmptyBlocksTempFile);
+    }
+
+    fclose(accountsEmptyBlocksTempFile);
+
+    status = remove(accountsEmptyBlocksFilename);
+    if (status) {
+        fprintf(stderr,
+                "Unable to remove the file %s.\n", accountsEmptyBlocksFilename);
+
+        return -1;
+    }
+
+    status = rename("accounts-empty-blocks.tmp", accountsEmptyBlocksFilename);
+    if (status) {
+        fprintf(stderr,
+                "Unable to rename the file from 'accounts-empty-blocks.tmp' to %s.\n", accountsEmptyBlocksFilename);
+
+        return -1;
+    }
+
     return 0;
 }
 
