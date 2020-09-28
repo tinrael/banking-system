@@ -16,7 +16,7 @@ const char accountsFilename[] = "accounts.fl";
 const char accountsEmptyBlocksFilename[] = "accounts-empty-blocks.fl";
 
 tNode* indexesList = NULL;
-tElement* addressesOfEmptyBlocks = NULL;
+tElement* addressesOfCustomersEmptyBlocks = NULL;
 
 int initialize(int mode) {
     char* filesMode;
@@ -86,11 +86,11 @@ void uploadData() {
         addInAscendingOrder(&indexesList, index);
     }
 
-    clearStack(&addressesOfEmptyBlocks);
+    clearStack(&addressesOfCustomersEmptyBlocks);
     long int address;
     fseek(customersEmptyBlocksFile, 0L, SEEK_SET);
     while (fread(&address, sizeof(long int), 1, customersEmptyBlocksFile) == 1) {
-        push(&addressesOfEmptyBlocks, address);
+        push(&addressesOfCustomersEmptyBlocks, address);
     }
 }
 
@@ -131,8 +131,8 @@ int finalize() {
     FILE* emptyBlocksTempFile = fopen("customers-empty-blocks.tmp", "wb");
 
     long int address;
-    while (!isEmpty(addressesOfEmptyBlocks)) {
-        address = pop(&addressesOfEmptyBlocks);
+    while (!isEmpty(addressesOfCustomersEmptyBlocks)) {
+        address = pop(&addressesOfCustomersEmptyBlocks);
         fwrite(&address, sizeof(long int), 1, emptyBlocksTempFile);
     }
 
@@ -178,8 +178,8 @@ void insert_m() {
     struct tIndex index;
     index.id = customerContainer.customer.id;
 
-    if (!isEmpty(addressesOfEmptyBlocks)) {
-        long int addressOfEmptyBlock = pop(&addressesOfEmptyBlocks);
+    if (!isEmpty(addressesOfCustomersEmptyBlocks)) {
+        long int addressOfEmptyBlock = pop(&addressesOfCustomersEmptyBlocks);
         fseek(customersFile, addressOfEmptyBlock, SEEK_SET);
     } else {
         fseek(customersFile, 0L, SEEK_END);
@@ -281,7 +281,7 @@ void del_m(int customerId) {
         fseek(customersFile, index.address, SEEK_SET);
         fwrite(&customerContainer, sizeof(struct tCustomerContainer), 1, customersFile);
 
-        push(&addressesOfEmptyBlocks, index.address);
+        push(&addressesOfCustomersEmptyBlocks, index.address);
         eraseFromList(&indexesList, index.id);
     } else {
         printf("Not found customer with id %d.\n", customerId);
