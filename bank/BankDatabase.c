@@ -136,15 +136,15 @@ int finalize() {
         return -1;
     }
 
-    FILE* emptyBlocksTempFile = fopen("customers-empty-blocks.tmp", "wb");
+    FILE* customersEmptyBlocksTempFile = fopen("customers-empty-blocks.tmp", "wb");
 
     long int address;
     while (!isEmpty(addressesOfCustomersEmptyBlocks)) {
         address = pop(&addressesOfCustomersEmptyBlocks);
-        fwrite(&address, sizeof(long int), 1, emptyBlocksTempFile);
+        fwrite(&address, sizeof(long int), 1, customersEmptyBlocksTempFile);
     }
 
-    fclose(emptyBlocksTempFile);
+    fclose(customersEmptyBlocksTempFile);
 
     status = remove(customersEmptyBlocksFilename);
     if (status) {
