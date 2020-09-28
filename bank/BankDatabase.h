@@ -24,6 +24,14 @@ struct tAccount {
     double balance;
 };
 
+struct tAccountContainer {
+    bool isDeleted; // identify if the record is logically deleted
+
+    struct tAccount account;
+
+    long int addressOfNext; // the address of the next bank account in the list
+};
+
 struct tIndex {
     int id; // tCustomer::id
     long int address; // the address of the corresponding customer in the database
